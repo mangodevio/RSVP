@@ -1,18 +1,9 @@
 import React, { useState, useRef, useEffect, createRef } from "react";
 import { Send, CheckCircle, HelpCircle, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { formConfig } from "../utils/formUtils";
 
 type FormView = "initial" | "confirmed" | "tentative" | "submitted";
-
-// Google Form action URL and field names
-const FORM_ACTION =
-  "https://docs.google.com/forms/d/e/1FAIpQLSepmjeCjWq1Gb2-Vlui11eZ7octprg4Wqy7I_msEt0IG7nHCg/formResponse";
-const FIELD_NAMES = {
-  name: "entry.1264838894",
-  phone: "entry.327917306",
-  partySize: "entry.1390779751",
-  status: "entry.1080861501",
-};
 
 function RSVPForm() {
   const navigate = useNavigate();
@@ -21,6 +12,7 @@ function RSVPForm() {
     name: "",
     phone: "",
     partySize: "",
+    honeypot: "", // Honeypot field to catch bots
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -51,35 +43,60 @@ function RSVPForm() {
     setIsSubmitting(true);
     setErrorMessage(null);
 
+    // Simple rate limiting - prevent multiple submissions in a short time period
+    const lastSubmission = localStorage.getItem("lastRsvpSubmission");
+    if (lastSubmission) {
+      const timeSinceLastSubmission = Date.now() - parseInt(lastSubmission, 10);
+      // If less than 30 seconds since last submission
+      if (timeSinceLastSubmission < 30000) {
+        setErrorMessage("Please wait a moment before submitting again.");
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
+    // Honeypot check - if the honeypot field has a value, it's likely a bot
+    if (formData.honeypot) {
+      console.log("Honeypot triggered - likely bot submission");
+      // Pretend to submit but don't actually do it
+      setTimeout(() => {
+        setFormView("submitted");
+        setIsSubmitting(false);
+      }, 1000);
+      return;
+    }
+
     try {
+      // Record this submission attempt
+      localStorage.setItem("lastRsvpSubmission", Date.now().toString());
       // Create a hidden form to submit to Google Forms
       const form = document.createElement("form");
       form.method = "POST";
-      form.action = FORM_ACTION;
+      form.action = formConfig.formAction;
       form.target = "hidden-iframe"; // Submit to our hidden iframe
 
       // Add the form fields
       const nameField = document.createElement("input");
       nameField.type = "hidden";
-      nameField.name = FIELD_NAMES.name;
+      nameField.name = formConfig.fieldNames.name;
       nameField.value = formData.name;
       form.appendChild(nameField);
 
       const phoneField = document.createElement("input");
       phoneField.type = "hidden";
-      phoneField.name = FIELD_NAMES.phone;
+      phoneField.name = formConfig.fieldNames.phone;
       phoneField.value = formData.phone;
       form.appendChild(phoneField);
 
       const partySizeField = document.createElement("input");
       partySizeField.type = "hidden";
-      partySizeField.name = FIELD_NAMES.partySize;
+      partySizeField.name = formConfig.fieldNames.partySize;
       partySizeField.value = formData.partySize;
       form.appendChild(partySizeField);
 
       const statusField = document.createElement("input");
       statusField.type = "hidden";
-      statusField.name = FIELD_NAMES.status;
+      statusField.name = formConfig.fieldNames.status;
       statusField.value =
         status === "confirmed"
           ? "I'll be there Inshallah"
@@ -249,6 +266,24 @@ function RSVPForm() {
             value={formData.partySize}
             onChange={handleInputChange}
             disabled={isSubmitting}
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            If you know someone else is adding you to their party, please avoid
+            submitting to prevent duplicate counts.
+          </p>
+        </div>
+
+        {/* Honeypot field - hidden from users but bots will fill it out */}
+        <div style={{ display: "none" }}>
+          <label htmlFor="honeypot">Leave this empty</label>
+          <input
+            type="text"
+            id="honeypot"
+            name="honeypot"
+            value={formData.honeypot}
+            onChange={handleInputChange}
+            tabIndex={-1}
+            autoComplete="off"
           />
         </div>
 
