@@ -10,5 +10,5 @@ export default defineConfig({
   // Base path for GitHub Pages - should match your repository name
   // If your repo is at https://username.github.io/repo-name/, use '/repo-name/'
   // If your repo is at https://username.github.io/, use '/'
-  base: "/RSVP/src",
+  base: "/RSVP/",
 });
