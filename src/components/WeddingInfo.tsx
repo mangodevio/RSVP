@@ -1,5 +1,5 @@
 import React from "react";
-import { MapPin, Calendar, Clock, Gift, CalendarPlus } from "lucide-react";
+import { MapPin, Calendar, Clock, Gift } from "lucide-react";
 import {
   createWeddingEvent,
   generateGoogleCalendarUrl,
@@ -22,7 +22,7 @@ function WeddingInfo() {
     <div className="space-y-6 sm:space-y-8 bg-white p-4 sm:p-6 rounded-lg shadow-sm">
       <div className="text-center mb-6 sm:mb-8">
         <h1 className="text-xl sm:text-2xl font-serif mb-2">
-          Mazin's Wedding Celebration
+          Mr. and Mrs. Ashfaqs Wedding Celebration
         </h1>
         <p className="text-[#c1a57b]">Join us on our special day</p>
       </div>
@@ -42,9 +42,9 @@ function WeddingInfo() {
                   className="flex-1 bg-white border border-gray-300 py-2 px-3 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors text-sm"
                 >
                   <img
-                    src="/google-logo.png"
+                    src="/RSVP/google-logo.png"
                     alt="Google"
-                    className="w-7 h-7 mr-1"
+                    className="w-7 h-7"
                   />
                   Add to Calendar
                 </button>
@@ -53,7 +53,7 @@ function WeddingInfo() {
                   className="flex-1 bg-white border border-gray-300 py-2 px-3 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors text-sm"
                 >
                   <img
-                    src="/apple-logo.png"
+                    src="/RSVP/apple-logo.png"
                     alt="Apple"
                     className="w-4 h-5 mr-2"
                   />
@@ -92,7 +92,7 @@ function WeddingInfo() {
             <h2 className="font-medium mb-1">Gift Registry</h2>
             <p className="text-sm sm:text-base">
               Your presence is our present. If you wish to give a gift, please
-              see our a gift registry.
+              no boxed gifts. The couple lives out of state.
             </p>
           </div>
         </div>
@@ -105,6 +105,7 @@ function WeddingInfo() {
               • We are requesting no pictures to protect the privacy of bride,
               groom and other guests.
             </li>
+            <li>• Please arrive on time.</li>
           </ul>
         </div>
       </div>
