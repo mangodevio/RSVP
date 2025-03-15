@@ -89,10 +89,9 @@ function WeddingInfo() {
         <div className="flex items-start space-x-3 sm:space-x-4">
           <Gift className="w-5 h-5 sm:w-6 sm:h-6 text-[#c1a57b] flex-shrink-0 mt-1" />
           <div>
-            <h2 className="font-medium mb-1">Gift Registry</h2>
+            <h2 className="font-medium mb-1">Gifts</h2>
             <p className="text-sm sm:text-base">
-              Your presence is our present. If you wish to give a gift, please
-              no boxed gifts. The couple lives out of state.
+              Your presence is the greatest gift of all.
             </p>
           </div>
         </div>

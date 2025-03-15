@@ -2,8 +2,46 @@ import React, { useState, useRef, useEffect, createRef } from "react";
 import { Send, CheckCircle, HelpCircle, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { formConfig } from "../utils/formUtils";
+import {
+  generateGoogleCalendarUrl,
+  downloadIcsFile,
+} from "../services/calendarService";
+import { CalendarEvent } from "../types";
 
-type FormView = "initial" | "confirmed" | "tentative" | "submitted";
+type FormView =
+  | "initial"
+  | "confirmed"
+  | "tentative"
+  | "submitted"
+  | "calendar";
+
+// Google Form action URL and field names
+const FORM_ACTION =
+  "https://docs.google.com/forms/d/e/1FAIpQLSepmjeCjWq1Gb2-Vlui11eZ7octprg4Wqy7I_msEt0IG7nHCg/formResponse";
+const FIELD_NAMES = {
+  name: "entry.1264838894",
+  phone: "entry.327917306",
+  partySize: "entry.1390779751",
+  status: "entry.1080861501",
+};
+
+// Create a reminder event for March 30th, 2025
+const createReminderEvent = (): CalendarEvent => {
+  // Reminder date: March 30th, 2025
+  const startDate = new Date("2025-03-30T12:00:00");
+  // 1 hour event
+  const endDate = new Date("2025-03-30T13:00:00");
+
+  return {
+    title: "RSVP to Mazin's Wedding",
+    description:
+      "Reminder to RSVP for Mazin's wedding celebration on May 3rd, 2025.",
+    location:
+      "Muslim Educational Trust, 10330 SW Scholls Ferry Rd, Tigard, OR 97223",
+    startDate,
+    endDate,
+  };
+};
 
 function RSVPForm() {
   const navigate = useNavigate();
@@ -154,11 +192,72 @@ function RSVPForm() {
           </button>
 
           <button
-            onClick={() => setFormView("tentative")}
+            onClick={() => setFormView("calendar")}
             className="w-full border-2 border-[#2d3047] text-[#2d3047] py-3 rounded-lg flex items-center justify-center space-x-3 hover:bg-gray-50 transition-colors"
           >
             <HelpCircle className="w-5 h-5" />
             <span>Not sure yet</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Calendar reminder view
+  if (formView === "calendar") {
+    const reminderEvent = createReminderEvent();
+
+    const handleAddToGoogleCalendar = () => {
+      const url = generateGoogleCalendarUrl(reminderEvent);
+      window.open(url, "_blank");
+    };
+
+    const handleAddToAppleCalendar = () => {
+      downloadIcsFile(reminderEvent);
+    };
+
+    return (
+      <div className="space-y-6 sm:space-y-8">
+        <div className="text-center mb-6">
+          <h2 className="text-xl sm:text-2xl font-serif mb-2">
+            Add a Calendar Reminder
+          </h2>
+          <p className="text-sm sm:text-base text-gray-600">
+            Add a reminder to your calendar so you don't forget to RSVP
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex space-x-2">
+            <button
+              onClick={handleAddToGoogleCalendar}
+              className="flex-1 bg-white border border-gray-300 py-2 px-3 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors text-sm"
+            >
+              <img
+                src="/RSVP/google-logo.png"
+                alt="Google"
+                className="w-7 h-7 mr-1"
+              />
+              Add to Calendar
+            </button>
+            <button
+              onClick={handleAddToAppleCalendar}
+              className="flex-1 bg-white border border-gray-300 py-2 px-3 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors text-sm"
+            >
+              <img
+                src="/RSVP/apple-logo.png"
+                alt="Apple"
+                className="w-4 h-5 mr-2"
+              />
+              Add to Calendar
+            </button>
+          </div>
+
+          <button
+            onClick={() => setFormView("initial")}
+            className="w-full border border-[#2d3047] text-[#2d3047] py-3 rounded-lg flex items-center justify-center space-x-3 hover:bg-gray-50 transition-colors"
+          >
+            <span>Back</span>
           </button>
         </div>
       </div>
