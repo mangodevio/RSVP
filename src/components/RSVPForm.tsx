@@ -15,16 +15,6 @@ type FormView =
   | "submitted"
   | "calendar";
 
-// Google Form action URL and field names
-const FORM_ACTION =
-  "https://docs.google.com/forms/d/e/1FAIpQLSepmjeCjWq1Gb2-Vlui11eZ7octprg4Wqy7I_msEt0IG7nHCg/formResponse";
-const FIELD_NAMES = {
-  name: "entry.1264838894",
-  phone: "entry.327917306",
-  partySize: "entry.1390779751",
-  status: "entry.1080861501",
-};
-
 // Create a reminder event for March 30th, 2025
 const createReminderEvent = (): CalendarEvent => {
   // Reminder date: March 30th, 2025

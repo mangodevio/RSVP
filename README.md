@@ -7,10 +7,11 @@ This mobile-optimized Single Page Application (SPA) allows wedding guests to RSV
 ## Features
 
 - **RSVP Form**: Collect guest information (name, phone, party size)
-- **Temporary RSVP Option**: Allow guests to indicate they're not sure yet
-- **Google Sheets Integration**: Store all RSVPs in a Google Sheet
+- **Calendar Reminder Option**: Allow guests who are unsure to add a reminder to their calendar
+- **Google Sheets Integration**: Store confirmed RSVPs in a Google Sheet
 - **Wedding Details Display**: Show event information after submission
-- **Calendar Integration**: Add to Google Calendar or Apple Calendar
+- **Calendar Integration**: Add wedding event or RSVP reminder to Google Calendar or Apple Calendar
+- **Security Features**: Bot detection and rate limiting
 
 ## Technical Architecture
 
@@ -20,12 +21,14 @@ This mobile-optimized Single Page Application (SPA) allows wedding guests to RSV
 flowchart TD
     A[Initial View] --> B{User Decision}
     B -->|"I'll be there"| C[Regular RSVP Form]
-    B -->|"Not Sure Yet"| D[Temporary RSVP Form]
+    B -->|"Not Sure Yet"| D[Calendar Reminder View]
     C --> E[Submit to Google Sheet with 'confirmed' status]
-    D --> F[Submit to Google Sheet with 'tentative' status]
+    D --> F[Add to Google/Apple Calendar]
     E --> G[Show Wedding Details Component]
-    F --> G
+    F --> A
 ```
+
+````
 
 ### Form Submission
 
@@ -41,7 +44,7 @@ sequenceDiagram
     HiddenIframe->>GoogleForms: POST request with form data
     HiddenIframe-->>RSVPForm: onLoad event triggered
     RSVPForm-->>User: Display success message
-```
+````
 
 ### Component State Management
 
@@ -49,23 +52,32 @@ sequenceDiagram
 stateDiagram-v2
     [*] --> InitialView
     InitialView --> ConfirmedForm: "I'll be there"
-    InitialView --> TentativeForm: "Not Sure Yet"
+    InitialView --> CalendarView: "Not Sure Yet"
     ConfirmedForm --> SubmittingState
-    TentativeForm --> SubmittingState
+    CalendarView --> GoogleCalendar: "Add to Google Calendar"
+    CalendarView --> AppleCalendar: "Add to Apple Calendar"
+    CalendarView --> InitialView: "Back"
     SubmittingState --> ErrorState: API Error
     SubmittingState --> WeddingDetails: Success
     ErrorState --> RetrySubmission
     RetrySubmission --> SubmittingState
+    GoogleCalendar --> InitialView
+    AppleCalendar --> InitialView
 ```
 
 ### Calendar Integration
 
 ```mermaid
 flowchart LR
-    A[Wedding Details Component] --> B[Add to Google Calendar Button]
-    A --> C[Add to Apple Calendar Button]
+    A[Wedding Details Component] --> B[Add Wedding to Google Calendar]
+    A --> C[Add Wedding to Apple Calendar]
     B --> D[Open Google Calendar URL]
-    C --> E[Download .ics file]
+    C --> E[Download Wedding .ics file]
+
+    F[Calendar Reminder View] --> G[Add Reminder to Google Calendar]
+    F --> H[Add Reminder to Apple Calendar]
+    G --> I[Open Google Calendar URL with March 30th date]
+    H --> J[Download Reminder .ics file]
 ```
 
 ### Component Structure
@@ -74,6 +86,7 @@ flowchart LR
 classDiagram
     App --> RSVPForm
     App --> WeddingInfo
+    RSVPForm --> CalendarService
     WeddingInfo --> CalendarService
 
     class App {
@@ -82,13 +95,14 @@ classDiagram
     }
     class RSVPForm {
         +formState: object
-        +formType: string
+        +formView: FormView
         +isSubmitting: boolean
         +error: object
         +iframeRef: React.RefObject
+        +createReminderEvent()
         +handleSubmit()
-        +showConfirmForm()
-        +showTempForm()
+        +handleAddToGoogleCalendar()
+        +handleAddToAppleCalendar()
     }
     class WeddingInfo {
         +addToGoogleCalendar()
@@ -96,8 +110,9 @@ classDiagram
         +displayEventDetails()
     }
     class CalendarService {
-        +generateGoogleURL()
-        +generateICSFile()
+        +generateGoogleCalendarUrl()
+        +downloadIcsFile()
+        +createWeddingEvent()
     }
 ```
 
@@ -128,7 +143,7 @@ The RSVP form has multiple states:
 
 1. **Initial View**: Two buttons - "I'll be there" and "Not Sure Yet"
 2. **Confirmed RSVP Form**: Standard form for confirmed guests
-3. **Tentative RSVP Form**: Similar form for guests who aren't sure
+3. **Calendar Reminder View**: Options to add a reminder to calendar
 4. **Success View**: Confirmation message and transition to wedding details
 5. **Error View**: Error message with retry option
 
@@ -136,29 +151,55 @@ The RSVP form has multiple states:
 
 - **Name**: Text input (required)
 - **Phone**: Tel input (required)
-- **Party Size**: Number input (required, min: 1, max: 10)
+- **Party Size**: Number input (required, min: 1)
+- **Honeypot**: Hidden field to catch bots (security feature)
 
 #### Form Submission:
 
 - Uses a hidden iframe to submit data to Google Forms
 - Prevents the default redirect to Google Forms' "Response Recorded" page
+- Implements rate limiting to prevent multiple submissions
+- Uses honeypot field to detect and block bot submissions
 - Provides a seamless user experience by keeping users on the app
+
+#### Calendar Reminder:
+
+- For users selecting "Not Sure Yet"
+- Creates a reminder event for March 30th, 2025 (ahead of the wedding date)
+- Includes options for Google Calendar and Apple Calendar
+- Reminder includes the wedding venue information
+- Sets up alerts for 1 week and 1 day before the reminder date
 
 ### 3. Calendar Integration
 
-The app will provide two calendar options:
+The app provides two types of calendar events:
+
+#### Wedding Event (May 3rd, 2025):
+
+- Available from the Wedding Info component
+- Contains full wedding details
+- Includes venue information and time
+
+#### RSVP Reminder Event (March 30th, 2025):
+
+- Available when selecting "Not Sure Yet" on the RSVP form
+- Reminds guests to make a final RSVP decision
+- Set approximately one month before the wedding
+
+For each event type, two calendar options are provided:
 
 #### Google Calendar:
 
 - Generate a URL with event parameters
-- Format: `https://calendar.google.com/calendar/render?action=TEMPLATE&text={title}&dates={start}/{end}&details={description}&location={location}`
-- Open in a new tab when clicked
+- Format: `https://calendar.google.com/calendar/render?action=TEMPLATE&text={title}&dates={start}/{end}&details={description}&location={location}&add=POPUP=10080&POPUP=1440`
+- Includes reminders at 1 week and 1 day before the event
+- Opens in a new tab when clicked
 
 #### Apple Calendar (.ics file):
 
 - Generate an .ics file with event details
-- Use the proper VCALENDAR format
-- Trigger download when clicked
+- Uses the proper VCALENDAR format with VALARM components for reminders
+- Triggers download when clicked
 
 ### 4. Mobile Optimization
 
@@ -218,17 +259,21 @@ src/
 │   ├── RSVPForm.tsx           # RSVP form component with Google Forms integration
 │   └── WeddingInfo.tsx        # Wedding details component
 ├── services/
-│   ├── googleSheetsService.ts # Google Sheets service (for reference)
 │   └── calendarService.ts     # Calendar integration utilities
+├── utils/
+│   └── formUtils.ts           # Form configuration and utilities
 └── vite-env.d.ts             # TypeScript declarations
 ```
 
 ## Testing Considerations
 
-- Test form submissions for both confirmed and tentative RSVPs
-- Test calendar integration on different mobile devices and browsers
+- Test form submissions for confirmed RSVPs
+- Test calendar reminder functionality for "Not sure yet" option
+- Test both Google Calendar and Apple Calendar integration on different devices
+- Test security features (honeypot field, rate limiting)
 - Test error handling and edge cases
 - Test with various network conditions
+- Verify correct event dates for both wedding event and reminder event
 
 ## Future Enhancements
 
