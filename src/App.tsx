@@ -8,8 +8,8 @@ function App() {
   const location = useLocation();
 
   return (
-    <div className="h-screen bg-[#f8f3ed] text-[#2d3047] flex flex-col overflow-hidden">
-      <header className="bg-[#2d3047] text-[#f8f3ed] py-6 px-4">
+    <div className="min-h-screen bg-[#f8f3ed] text-[#2d3047] flex flex-col">
+      <header className="bg-[#2d3047] text-[#f8f3ed] py-6 px-4 sticky top-0 z-10">
         <h1 className="text-center font-serif text-xl sm:text-2xl">
           Walima Celebration RSVP
         </h1>
@@ -22,7 +22,7 @@ function App() {
         </Routes>
       </main>
 
-      <footer className="bg-[#2d3047] text-[#f8f3ed] py-4 px-4">
+      <footer className="bg-[#2d3047] text-[#f8f3ed] py-4 px-4 sticky bottom-0 z-10">
         <div className="container mx-auto text-center">
           <span></span>
           <div className="flex items-center justify-center space-x-4 sm:space-x-6">

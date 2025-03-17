@@ -1,5 +1,13 @@
-import React, { useState, useRef, useEffect, createRef } from "react";
-import { Send, CheckCircle, HelpCircle, AlertCircle } from "lucide-react";
+import React, { useState, useEffect, createRef } from "react";
+import {
+  Send,
+  CheckCircle,
+  HelpCircle,
+  AlertCircle,
+  Calendar,
+  Clock,
+  MapPin,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { formConfig } from "../utils/formUtils";
 import {
@@ -8,12 +16,7 @@ import {
 } from "../services/calendarService";
 import { CalendarEvent } from "../types";
 
-type FormView =
-  | "initial"
-  | "confirmed"
-  | "tentative"
-  | "submitted"
-  | "calendar";
+type FormView = "initial" | "confirmed" | "submitted" | "calendar";
 
 // Create a reminder event for March 30th, 2025
 const createReminderEvent = (): CalendarEvent => {
@@ -40,6 +43,7 @@ function RSVPForm() {
     name: "",
     phone: "",
     partySize: "",
+    children: "",
     honeypot: "", // Honeypot field to catch bots
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,10 +67,7 @@ function RSVPForm() {
     setFormData({ ...formData, [id]: value });
   };
 
-  const handleSubmit = async (
-    e: React.FormEvent,
-    status: "confirmed" | "tentative"
-  ) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMessage(null);
@@ -115,20 +116,22 @@ function RSVPForm() {
       phoneField.name = formConfig.fieldNames.phone;
       phoneField.value = formData.phone;
       form.appendChild(phoneField);
-
       const partySizeField = document.createElement("input");
       partySizeField.type = "hidden";
       partySizeField.name = formConfig.fieldNames.partySize;
       partySizeField.value = formData.partySize;
       form.appendChild(partySizeField);
 
+      const childrenField = document.createElement("input");
+      childrenField.type = "hidden";
+      childrenField.name = formConfig.fieldNames.children;
+      childrenField.value = formData.children;
+      form.appendChild(childrenField);
+
       const statusField = document.createElement("input");
       statusField.type = "hidden";
       statusField.name = formConfig.fieldNames.status;
-      statusField.value =
-        status === "confirmed"
-          ? "I'll be there Inshallah"
-          : "Remind me again closer to the event";
+      statusField.value = "I'll be there Inshallah";
       form.appendChild(statusField);
 
       // Append the form to the body, submit it, and remove it
@@ -170,6 +173,37 @@ function RSVPForm() {
           <p className="text-sm sm:text-base text-gray-600">
             Please let us know if you'll be joining us
           </p>
+        </div>
+
+        {/* Event details section - styled to match WeddingInfo component */}
+        <div className="space-y-5 sm:space-y-6 bg-white p-4 sm:p-6 rounded-lg shadow-sm mb-6">
+          <div className="flex items-start space-x-3 sm:space-x-4">
+            <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-[#c1a57b] flex-shrink-0 mt-1" />
+            <div>
+              <h2 className="font-medium mb-1">Date</h2>
+              <p className="text-sm sm:text-base">Saturday, May 3rd, 2025</p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-3 sm:space-x-4">
+            <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-[#c1a57b] flex-shrink-0 mt-1" />
+            <div>
+              <h2 className="font-medium mb-1">Time</h2>
+              <p className="text-sm sm:text-base">1:30 PM - Walima Start</p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-3 sm:space-x-4">
+            <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-[#c1a57b] flex-shrink-0 mt-1" />
+            <div>
+              <h2 className="font-medium mb-1">Venue</h2>
+              <div className="text-sm sm:text-base">
+                <p>Muslim Educational Trust</p>
+                <p>10330 SW Scholls Ferry Rd</p>
+                <p>Tigard, OR 97223</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="space-y-4">
@@ -257,12 +291,7 @@ function RSVPForm() {
   // RSVP Form (either confirmed or tentative)
   return (
     <>
-      <form
-        onSubmit={(e) =>
-          handleSubmit(e, formView === "confirmed" ? "confirmed" : "tentative")
-        }
-        className="space-y-4 sm:space-y-6"
-      >
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
         {/* Hidden iframe for form submission */}
         <iframe
           name="hidden-iframe"
@@ -359,6 +388,24 @@ function RSVPForm() {
           <p className="text-xs text-gray-500 mt-1">
             If you know someone else is adding you to their party, please avoid
             submitting to prevent duplicate counts.
+          </p>
+        </div>
+
+        <div className="space-y-1 sm:space-y-2">
+          <label htmlFor="children" className="block text-sm font-medium">
+            Number of Children
+          </label>
+          <input
+            type="number"
+            id="children"
+            min="0"
+            className="w-full px-3 sm:px-4 py-2 rounded-lg border border-[#c1a57b] bg-white focus:outline-none focus:ring-2 focus:ring-[#c1a57b]"
+            value={formData.children}
+            onChange={handleInputChange}
+            disabled={isSubmitting}
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Please specify how many children will be attending with you.
           </p>
         </div>
 

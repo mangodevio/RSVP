@@ -12,6 +12,7 @@ export const formConfig = {
     phone: "entry.327917306",
     partySize: "entry.1390779751",
     status: "entry.1080861501",
+    children: "entry.484918407",
   },
 };
 
