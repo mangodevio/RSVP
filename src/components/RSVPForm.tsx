@@ -167,9 +167,12 @@ function RSVPForm() {
     return (
       <div className="space-y-6 sm:space-y-8">
         <div className="text-center mb-6">
-          <h2 className="text-xl sm:text-2xl font-serif mb-2">
-            Will you be attending?
+          <h2 className="text-xl sm:text-2xl font-serif mb-1">
+            Mrs. and Mr. Arshad Ashfaq
           </h2>
+          <h3 className="text-lg sm:text-xl font-serif mb-3">
+            cordially invite you to celebrate their son's&nbsp;wedding
+          </h3>
           <p className="text-sm sm:text-base text-gray-600">
             Please let us know if you'll be joining us
           </p>
@@ -373,7 +376,7 @@ function RSVPForm() {
 
         <div className="space-y-1 sm:space-y-2">
           <label htmlFor="partySize" className="block text-sm font-medium">
-            Number of Guests
+            Number of Adults
           </label>
           <input
             type="number"

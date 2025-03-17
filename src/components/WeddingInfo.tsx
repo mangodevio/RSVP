@@ -22,7 +22,7 @@ function WeddingInfo() {
     <div className="space-y-6 sm:space-y-8 bg-white p-4 sm:p-6 rounded-lg shadow-sm">
       <div className="text-center mb-6 sm:mb-8">
         <h1 className="text-xl sm:text-2xl font-serif mb-2">
-          Mr. and Mrs. Ashfaqs Wedding Celebration
+          Mr. & Mrs. Ashfaqs Wedding Celebration
         </h1>
         <p className="text-[#c1a57b]">Join us on our special day</p>
       </div>

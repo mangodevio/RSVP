@@ -11,7 +11,7 @@ function App() {
     <div className="min-h-screen bg-[#f8f3ed] text-[#2d3047] flex flex-col">
       <header className="bg-[#2d3047] text-[#f8f3ed] py-6 px-4 sticky top-0 z-10">
         <h1 className="text-center font-serif text-xl sm:text-2xl">
-          Walima Celebration RSVP
+          Mazin Ashfaq's Walima Celebration
         </h1>
       </header>
 
