@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { Info, MessageCircle } from "lucide-react";
 import RSVPForm from "./components/RSVPForm";
-import WeddingInfo from "./components/WeddingInfo";
+import WalimaInfo from "./components/WalimaInfo";
 
 function App() {
   const location = useLocation();
@@ -18,7 +18,7 @@ function App() {
       <main className="flex-1 container mx-auto px-4 py-6 max-w-md overflow-y-auto">
         <Routes>
           <Route path="/" element={<RSVPForm />} />
-          <Route path="/info" element={<WeddingInfo />} />
+          <Route path="/info" element={<WalimaInfo />} />
         </Routes>
       </main>
 
@@ -41,7 +41,7 @@ function App() {
               <span>
                 {location.pathname === "/info"
                   ? "Back to RSVP"
-                  : "Wedding Details"}
+                  : "Walima Details"}
               </span>
             </Link>
           </div>

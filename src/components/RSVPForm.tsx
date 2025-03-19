@@ -26,9 +26,9 @@ const createReminderEvent = (): CalendarEvent => {
   const endDate = new Date("2025-03-30T13:00:00");
 
   return {
-    title: "RSVP to Mazin's Wedding",
+    title: "RSVP to Mazin's Walima",
     description:
-      "Reminder to RSVP for Mazin's wedding celebration on May 3rd, 2025.",
+      "Reminder to RSVP for Mazin's Walima celebration on May 3rd, 2025.",
     location:
       "Muslim Educational Trust, 10330 SW Scholls Ferry Rd, Tigard, OR 97223",
     startDate,
@@ -50,7 +50,7 @@ function RSVPForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const iframeRef = createRef<HTMLIFrameElement>();
 
-  // Auto-redirect to wedding details after submission
+  // Auto-redirect to Walima details after submission
   useEffect(() => {
     if (formView === "submitted") {
       // Show success message briefly, then redirect
@@ -156,7 +156,7 @@ function RSVPForm() {
       <div className="space-y-4 sm:space-y-6">
         <div className="bg-green-50 text-green-800 p-4 rounded-lg text-center">
           <p className="font-medium">Thank you for your RSVP!</p>
-          <p className="text-sm mt-2">Redirecting to wedding details...</p>
+          <p className="text-sm mt-2">Redirecting to Walima details...</p>
         </div>
       </div>
     );
@@ -171,14 +171,14 @@ function RSVPForm() {
             Mrs. and Mr. Arshad Ashfaq
           </h2>
           <h3 className="text-lg sm:text-xl font-serif mb-3">
-            cordially invite you to celebrate their son's&nbsp;wedding
+            cordially invite you to celebrate their son's&nbsp;Walima
           </h3>
           <p className="text-sm sm:text-base text-gray-600">
             Please let us know if you'll be joining us
           </p>
         </div>
 
-        {/* Event details section - styled to match WeddingInfo component */}
+        {/* Event details section - styled to match WalimaInfo component */}
         <div className="space-y-5 sm:space-y-6 bg-white p-4 sm:p-6 rounded-lg shadow-sm mb-6">
           <div className="flex items-start space-x-3 sm:space-x-4">
             <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-[#c1a57b] flex-shrink-0 mt-1" />

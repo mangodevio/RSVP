@@ -51,7 +51,7 @@ export const generateIcsFileContent = (event: CalendarEvent): string => {
   return `BEGIN:VCALENDAR
 VERSION:2.0
 CALSCALE:GREGORIAN
-PRODID:-//Wedding RSVP App//EN
+PRODID:-//Walima RSVP App//EN
 METHOD:PUBLISH
 BEGIN:VEVENT
 DTSTART:${startDate}
@@ -98,17 +98,17 @@ export const downloadIcsFile = (event: CalendarEvent): void => {
 };
 
 /**
- * Creates a calendar event object from wedding details
+ * Creates a calendar event object from Walima details
  * @returns Calendar event object
  */
-export const createWeddingEvent = (): CalendarEvent => {
-  // Wedding date: May 3rd, 2025 at 6:30 PM
+export const createWalimaEvent = (): CalendarEvent => {
+  // Walima date: May 3rd, 2025 at 6:30 PM
   const startDate = new Date("2025-05-03T18:30:00");
   // Assuming the event lasts 4 hours
   const endDate = new Date("2025-05-03T21:30:00");
 
   return {
-    title: "Mazin's Wedding Celebration",
+    title: "Mazin's Walima Celebration",
     description:
       "Join us for our special day. Please adhere to islamic modesty principles. We are requesting no pictures to protect the privacy of bride, groom and other guests.",
     location:

@@ -1,16 +1,16 @@
-# Wedding RSVP App - Technical Design Document
+# Walima RSVP App - Technical Design Document
 
 ## Project Overview
 
-This mobile-optimized Single Page Application (SPA) allows wedding guests to RSVP through a link sent via SMS. The app provides options for both confirmed and tentative RSVPs, displays wedding details, and offers calendar integration.
+This mobile-optimized Single Page Application (SPA) allows Walima guests to RSVP through a link sent via SMS. The app provides options for both confirmed and tentative RSVPs, displays Walima details, and offers calendar integration.
 
 ## Features
 
 - **RSVP Form**: Collect guest information (name, phone, party size)
 - **Calendar Reminder Option**: Allow guests who are unsure to add a reminder to their calendar
 - **Google Sheets Integration**: Store confirmed RSVPs in a Google Sheet
-- **Wedding Details Display**: Show event information after submission
-- **Calendar Integration**: Add wedding event or RSVP reminder to Google Calendar or Apple Calendar
+- **Walima Details Display**: Show event information after submission
+- **Calendar Integration**: Add Walima event or RSVP reminder to Google Calendar or Apple Calendar
 - **Security Features**: Bot detection and rate limiting
 
 ## Technical Architecture
@@ -24,7 +24,7 @@ flowchart TD
     B -->|"Not Sure Yet"| D[Calendar Reminder View]
     C --> E[Submit to Google Sheet with 'confirmed' status]
     D --> F[Add to Google/Apple Calendar]
-    E --> G[Show Wedding Details Component]
+    E --> G[Show Walima Details Component]
     F --> A
 ```
 
@@ -58,7 +58,7 @@ stateDiagram-v2
     CalendarView --> AppleCalendar: "Add to Apple Calendar"
     CalendarView --> InitialView: "Back"
     SubmittingState --> ErrorState: API Error
-    SubmittingState --> WeddingDetails: Success
+    SubmittingState --> WalimaDetails: Success
     ErrorState --> RetrySubmission
     RetrySubmission --> SubmittingState
     GoogleCalendar --> InitialView
@@ -69,10 +69,10 @@ stateDiagram-v2
 
 ```mermaid
 flowchart LR
-    A[Wedding Details Component] --> B[Add Wedding to Google Calendar]
-    A --> C[Add Wedding to Apple Calendar]
+    A[Walima Details Component] --> B[Add Walima to Google Calendar]
+    A --> C[Add Walima to Apple Calendar]
     B --> D[Open Google Calendar URL]
-    C --> E[Download Wedding .ics file]
+    C --> E[Download Walima .ics file]
 
     F[Calendar Reminder View] --> G[Add Reminder to Google Calendar]
     F --> H[Add Reminder to Apple Calendar]
@@ -85,9 +85,9 @@ flowchart LR
 ```mermaid
 classDiagram
     App --> RSVPForm
-    App --> WeddingInfo
+    App --> WalimaInfo
     RSVPForm --> CalendarService
-    WeddingInfo --> CalendarService
+    WalimaInfo --> CalendarService
 
     class App {
         +currentView: string
@@ -104,7 +104,7 @@ classDiagram
         +handleAddToGoogleCalendar()
         +handleAddToAppleCalendar()
     }
-    class WeddingInfo {
+    class WalimaInfo {
         +addToGoogleCalendar()
         +addToAppleCalendar()
         +displayEventDetails()
@@ -112,7 +112,7 @@ classDiagram
     class CalendarService {
         +generateGoogleCalendarUrl()
         +downloadIcsFile()
-        +createWeddingEvent()
+        +createWalimaEvent()
     }
 ```
 
@@ -144,7 +144,7 @@ The RSVP form has multiple states:
 1. **Initial View**: Two buttons - "I'll be there" and "Not Sure Yet"
 2. **Confirmed RSVP Form**: Standard form for confirmed guests
 3. **Calendar Reminder View**: Options to add a reminder to calendar
-4. **Success View**: Confirmation message and transition to wedding details
+4. **Success View**: Confirmation message and transition to Walima details
 5. **Error View**: Error message with retry option
 
 #### Form Fields:
@@ -165,26 +165,26 @@ The RSVP form has multiple states:
 #### Calendar Reminder:
 
 - For users selecting "Not Sure Yet"
-- Creates a reminder event for March 30th, 2025 (ahead of the wedding date)
+- Creates a reminder event for March 30th, 2025 (ahead of the Walima date)
 - Includes options for Google Calendar and Apple Calendar
-- Reminder includes the wedding venue information
+- Reminder includes the Walima venue information
 - Sets up alerts for 1 week and 1 day before the reminder date
 
 ### 3. Calendar Integration
 
 The app provides two types of calendar events:
 
-#### Wedding Event (May 3rd, 2025):
+#### Walima Event (May 3rd, 2025):
 
-- Available from the Wedding Info component
-- Contains full wedding details
+- Available from the Walima Info component
+- Contains full Walima details
 - Includes venue information and time
 
 #### RSVP Reminder Event (March 30th, 2025):
 
 - Available when selecting "Not Sure Yet" on the RSVP form
 - Reminds guests to make a final RSVP decision
-- Set approximately one month before the wedding
+- Set approximately one month before the Walima
 
 For each event type, two calendar options are provided:
 
@@ -257,7 +257,7 @@ src/
 ├── types.ts                   # Type definitions
 ├── components/
 │   ├── RSVPForm.tsx           # RSVP form component with Google Forms integration
-│   └── WeddingInfo.tsx        # Wedding details component
+│   └── WalimaInfo.tsx        # Walima details component
 ├── services/
 │   └── calendarService.ts     # Calendar integration utilities
 ├── utils/
@@ -273,7 +273,7 @@ src/
 - Test security features (honeypot field, rate limiting)
 - Test error handling and edge cases
 - Test with various network conditions
-- Verify correct event dates for both wedding event and reminder event
+- Verify correct event dates for both Walima event and reminder event
 
 ## Future Enhancements
 
