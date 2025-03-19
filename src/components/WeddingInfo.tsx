@@ -69,7 +69,7 @@ function WeddingInfo() {
           <div>
             <h2 className="font-medium mb-1">Time</h2>
             <ul className="space-y-1 sm:space-y-2 text-sm sm:text-base">
-              <li>1:30 PM - Walima Start</li>
+              <li>6:30 PM - Walima Start</li>
             </ul>
           </div>
         </div>

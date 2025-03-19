@@ -192,7 +192,7 @@ function RSVPForm() {
             <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-[#c1a57b] flex-shrink-0 mt-1" />
             <div>
               <h2 className="font-medium mb-1">Time</h2>
-              <p className="text-sm sm:text-base">1:30 PM - Walima Start</p>
+              <p className="text-sm sm:text-base">6:30 PM - Walima Start</p>
             </div>
           </div>
 

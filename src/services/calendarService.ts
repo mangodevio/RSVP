@@ -102,10 +102,10 @@ export const downloadIcsFile = (event: CalendarEvent): void => {
  * @returns Calendar event object
  */
 export const createWeddingEvent = (): CalendarEvent => {
-  // Wedding date: May 3rd, 2025 at 1:30 PM
-  const startDate = new Date("2025-05-03T13:30:00");
+  // Wedding date: May 3rd, 2025 at 6:30 PM
+  const startDate = new Date("2025-05-03T18:30:00");
   // Assuming the event lasts 4 hours
-  const endDate = new Date("2025-05-03T17:30:00");
+  const endDate = new Date("2025-05-03T21:30:00");
 
   return {
     title: "Mazin's Wedding Celebration",
