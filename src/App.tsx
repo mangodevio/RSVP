@@ -27,11 +27,11 @@ function App() {
           <span></span>
           <div className="flex items-center justify-center space-x-4 sm:space-x-6">
             <a
-              href="sms:+19713009363"
+              href="sms:+15037348731"
               className="inline-flex items-center space-x-2 text-[#c1a57b] hover:text-white transition-colors text-sm sm:text-base"
             >
               <MessageCircle className="w-4 h-4" />
-              <span>Text Questions +1 (971) 300-9363</span>
+              <span>Text Questions +1 (503) 734-8731</span>
             </a>
             <Link
               to={location.pathname === "/info" ? "/" : "/info"}
